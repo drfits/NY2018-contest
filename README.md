@@ -15,3 +15,8 @@
 ## Определение победителя
 Открытое и совершенно субъективное решение организационного комитета сообщества Java Professionals.
 Оценивается решительно все – от правильности и лаконичности решения до оригинальности и находчивости реализации.
+
+## Build and execute commands
+
+1. build: ```mvn clean package```
+2. execute: ```java -jar NY2018-contest-1.0-SNAPSHOT.jar "https://github.com/JavaBy/JavaBy.github.io/archive/master.zip" "java"```
