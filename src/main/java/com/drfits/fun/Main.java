@@ -52,20 +52,22 @@ public final class Main {
     private static Path download(final String url) throws IOException {
         final Path archivePath = Files.createTempFile(System.nanoTime() + "", "");
         final URL archiveUrl = new URL(url);
-        try (ReadableByteChannel rbc = Channels.newChannel(archiveUrl.openStream())) {
-            try (FileOutputStream fos = new FileOutputStream(archivePath.toFile())) {
-                System.out.println("Downloading " + url + " as " + archivePath);
-                try (FileChannel channel = fos.getChannel()) {
-                    final long size = channel.transferFrom(rbc, 0, Long.MAX_VALUE);
-                    System.out.println("Archive downloaded. Size is " + size + " bytes.");
-                }
-            }
+
+        try (
+            ReadableByteChannel rbc = Channels.newChannel(archiveUrl.openStream());
+            FileOutputStream fos = new FileOutputStream(archivePath.toFile());
+            FileChannel channel = fos.getChannel()
+        ) {
+            System.out.println("Downloading " + url + " as " + archivePath);
+            final long size = channel.transferFrom(rbc, 0, Long.MAX_VALUE);
+            System.out.println("Archive downloaded. Size is " + size + " bytes.");
         }
+
         return archivePath;
     }
 
 
-    private static int countMatches(final Path archivePath, final String searchPattern) {
+    private static int countMatches(final Path archivePath, final String searchPattern) throws IOException {
         final Pattern pattern = Pattern.compile(searchPattern, Pattern.CASE_INSENSITIVE);
         System.out.println("Find " + searchPattern + " occurrences");
         int count = 0;
@@ -74,8 +76,6 @@ public final class Main {
                 .filter(zipEntry -> zipEntry.getName().matches(FILES_FOR_SEARCH))
                 .mapToInt(zipEntry -> getMatches(zipFile, zipEntry, pattern))
                 .sum();
-        } catch (final IOException e) {
-            System.err.println("Cannot search within archive: " + e.getMessage());
         }
         return count;
     }
