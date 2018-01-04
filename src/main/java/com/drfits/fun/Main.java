@@ -40,10 +40,10 @@ public final class Main {
         final Path archivePath = download(archiveUrl);
         final String searchPattern = args[1];
         final int matches = countMatches(archivePath, searchPattern);
-        System.out.println("Number of \"" + searchPattern + "\" matches: " + matches);
         Files.deleteIfExists(archivePath);
         System.out.println("File removed: " + archivePath);
         System.out.println("Execution time is (ISO-8601): " + Duration.between(start, Instant.now()));
+        System.out.println("Number of \"" + searchPattern + "\" matches: " + matches);
     }
 
     /**
